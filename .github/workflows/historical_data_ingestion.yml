@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  download_historical_data:
+  get_historical_data:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,11 +21,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests pandas openpyxl boto3
 
-    - name: Download climate data
+    - name: get climate data
       run: |
         python get_climate_data.py
 
-    - name: Download agriculture data
+    - name: get agriculture data
       run: |
         python get_agriculture_data.py
 
