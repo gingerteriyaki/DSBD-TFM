@@ -29,6 +29,18 @@ jobs:
       run: |
         python scripts/get_agriculture_data.py
 
+    - name: Download siembra data
+      run: |
+        python scripts/get_siembra_data.py
+
+    - name: Download produccion data
+      run: |
+        python scripts/get_produccion_data.py
+
+    - name: Download cosecha data
+      run: |
+        python scripts/get_cosecha_data.py
+
     - name: Preprocess historical agricultural data
       env:
         HISTORICAL_DATA_PATH: consolidado_agricola.xlsx
@@ -42,6 +54,27 @@ jobs:
         PROCESSED_CLIMATE_DATA_PATH: datos_climaticos_procesados.xlsx
       run: |
         python scripts/preprocess_climate_data.py
+
+    - name: Preprocess siembra data
+      env:
+        SIEMBRA_DATA_PATH: file-OVmSXH03v4dWWqXrKrjRqf46.xlsx
+        PROCESSED_SIEMBRA_DATA_PATH: datos_mensuales_siembras.xlsx
+      run: |
+        python scripts/preprocess_siembra_data.py
+
+    - name: Preprocess produccion data
+      env:
+        PRODUCCION_DATA_PATH: file-KUHNjBu92SZrHmASg0YcAcqj.xls
+        PROCESSED_PRODUCCION_DATA_PATH: datos_produccion_mensuales.xlsx
+      run: |
+        python scripts/preprocess_produccion_data.py
+
+    - name: Preprocess cosecha data
+      env:
+        COSECHA_DATA_PATH: file-xa2NL3L8lU7aZ4dNa9sq16Fd.xls
+        PROCESSED_COSECHA_DATA_PATH: datos_cosechada_mensuales.xlsx
+      run: |
+        python scripts/preprocess_cosecha_data.py
 
     - name: Upload to DigitalOcean Spaces
       env:
