@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  get_historical_data:
+  download_historical_data:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,21 +21,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests pandas openpyxl boto3
 
-    - name: get climate data
+    - name: Get climate data
       run: |
-        python get_climate_data.py
+        python scripts/get_climate_data.py
 
-    - name: get agriculture data
+    - name: Get agriculture data
       run: |
-        python get_agriculture_data.py
+        python scripts/get_agriculture_data.py
 
     #- name: Preprocess data
-     # run: |
-     #   python preprocess_data.py
+    #  run: |
+    #    python scripts/preprocess_data.py
 
     - name: Upload to DigitalOcean Spaces
       env:
         SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
         SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
       run: |
-        python upload_to_spaces.py
+        python scripts/upload_to_spaces.py
