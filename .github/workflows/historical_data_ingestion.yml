@@ -23,15 +23,15 @@ jobs:
 
     - name: Download climate data
       run: |
-        python download_climate_data.py
+        python get_climate_data.py
 
     - name: Download agriculture data
       run: |
-        python download_agriculture_data.py
+        python get_agriculture_data.py
 
-    - name: Preprocess data
-      run: |
-        python preprocess_data.py
+    #- name: Preprocess data
+     # run: |
+     #   python preprocess_data.py
 
     - name: Upload to DigitalOcean Spaces
       env:
