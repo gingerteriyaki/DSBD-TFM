@@ -29,9 +29,9 @@ jobs:
       run: |
         python scripts/get_agriculture_data.py
 
-    #- name: Preprocess data
-    #  run: |
-    #    python scripts/preprocess_data.py
+    - name: Preprocess data
+      run: |
+        python scripts/preprocess_data.py
 
     - name: Upload to DigitalOcean Spaces
       env:
