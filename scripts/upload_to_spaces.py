@@ -12,8 +12,9 @@ def upload_to_spaces():
 
     space_name = 'climaplatano'  # Asegúrate de que esto sea correcto
 
-    client.upload_file('base_de_datos_clima_cleaned.csv', space_name, 'clima.csv')
-    client.upload_file('consolidado_agricola_cleaned.csv', space_name, 'agricola.csv')
+    # Subir archivos generados por el preprocesamiento
+    client.upload_file('datos_consolidados.xlsx', space_name, 'datos_consolidados.xlsx')
+    client.upload_file('datos_climaticos_procesados.xlsx', space_name, 'datos_climaticos_procesados.xlsx')
     print("Datos subidos a DigitalOcean Spaces.")
 
 if __name__ == "__main__":

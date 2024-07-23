@@ -34,14 +34,14 @@ df_pivot = df.pivot_table(index=['Provincia', 'Estación', 'Año', 'Mes', 'Regi�
 
 # Renombrar las columnas para que coincidan con el formato deseado
 df_pivot.columns.name = None  # Eliminar el nombre de las columnas
-df_pivot = df_pivot.rename(columns={'Año': 'YEAR', 'Mes': 'MONTH', 'Región':'REGION'})
+df_pivot = df_pivot.rename(columns={'Año': 'YEAR', 'Mes': 'MONTH'})
 
 # Reorganizar las columnas en el formato deseado
-columnas_finales = ['YEAR', 'MONTH', 'REGION'] + [col for col in df_pivot.columns if col not in ['YEAR', 'MONTH', 'Región', 'Provincia', 'Estación']]
-df_pivot = df_pivot[['YEAR', 'MONTH', 'REGION'] + columnas_finales]
+columnas_finales = ['YEAR', 'MONTH', 'Región'] + [col for col in df_pivot.columns if col not in ['YEAR', 'MONTH', 'Región', 'Provincia', 'Estación']]
+df_pivot = df_pivot[['YEAR', 'MONTH', 'Región'] + columnas_finales]
 
 # Guardar los datos preprocesados en un nuevo archivo Excel
-output_path = os.environ.get('PROCESSED_CLIMATE_DATA_PATH', 'base_de_datos_clima_cleaned.csv')
+output_path = os.environ.get('PROCESSED_CLIMATE_DATA_PATH', 'datos_climaticos_procesados.xlsx')
 df_pivot.to_excel(output_path, index=False)
 
 print(f"Datos climáticos preprocesados y guardados en {output_path}")
