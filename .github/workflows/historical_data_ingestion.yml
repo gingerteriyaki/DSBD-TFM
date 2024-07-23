@@ -1,0 +1,41 @@
+name: Historical Data Ingestion
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download_historical_data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pandas openpyxl boto3
+
+    - name: Download climate data
+      run: |
+        python download_climate_data.py
+
+    - name: Download agriculture data
+      run: |
+        python download_agriculture_data.py
+
+    - name: Preprocess data
+      run: |
+        python preprocess_data.py
+
+    - name: Upload to DigitalOcean Spaces
+      env:
+        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+      run: |
+        python upload_to_spaces.py

@@ -1,0 +1,43 @@
+name: Current Data Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Corre diariamente a la medianoche
+  workflow_dispatch:
+
+jobs:
+  update_current_data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pandas openpyxl boto3
+
+    - name: Download current climate data
+      run: |
+        python download_current_climate_data.py
+
+    - name: Download current agriculture data
+      run: |
+        python download_current_agriculture_data.py
+
+    - name: Preprocess current data
+      run: |
+        python preprocess_current_data.py
+
+    - name: Upload current data to DigitalOcean Spaces
+      env:
+        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+      run: |
+        python upload_to_spaces.py
