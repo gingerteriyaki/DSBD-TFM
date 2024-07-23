@@ -72,7 +72,7 @@ for hoja in hojas:
 datos_df = pd.DataFrame(datos)
 
 # Guardar los datos preprocesados en un nuevo archivo Excel
-output_path = os.environ.get('PROCESSED_SIEMBRA_DATA_PATH', 'datos_mensuales_siembras.xlsx')
+output_path = os.environ.get('PROCESSED_SIEMBRA_DATA_PATH', 'datos_siembra_mensuales.xlsx')
 datos_df.to_excel(output_path, index=False)
 
 print(f"Datos de siembra preprocesados y guardados en {output_path}")

@@ -78,7 +78,7 @@ datos_df = pd.DataFrame(datos)
 datos_df = datos_df[['YEAR', 'REGION', 'SIEMBRA', 'COSECHA', 'PRODUCCION']]
 
 # Guardar los datos extraídos en un nuevo archivo Excel
-output_path = os.environ.get('PROCESSED_DATA_PATH', 'consolidado_agricola_cleaned.csv')
+output_path = os.environ.get('PROCESSED_DATA_PATH', 'datos_agricola_consolidados.csv')
 datos_df.to_excel(output_path, index=False)
 
 print(f"Datos preprocesados y guardados en {output_path}")

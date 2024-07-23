@@ -41,7 +41,7 @@ columnas_finales = ['YEAR', 'MONTH', 'Región'] + [col for col in df_pivot.colum
 df_pivot = df_pivot[['YEAR', 'MONTH', 'Región'] + columnas_finales]
 
 # Guardar los datos preprocesados en un nuevo archivo Excel
-output_path = os.environ.get('PROCESSED_CLIMATE_DATA_PATH', 'datos_climaticos_procesados.xlsx')
+output_path = os.environ.get('PROCESSED_CLIMATE_DATA_PATH', 'datos_climaticos.xlsx')
 df_pivot.to_excel(output_path, index=False)
 
 print(f"Datos climáticos preprocesados y guardados en {output_path}")

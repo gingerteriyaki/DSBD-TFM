@@ -44,21 +44,21 @@ jobs:
     - name: Preprocess historical agricultural data
       env:
         HISTORICAL_DATA_PATH: consolidado_agricola.xlsx
-        PROCESSED_DATA_PATH: datos_consolidados.xlsx
+        PROCESSED_DATA_PATH: datos_agricola_consolidados.xlsx
       run: |
         python scripts/preprocess_historical_agricultural_data.py
 
     - name: Preprocess climate data
       env:
         CLIMATE_DATA_PATH: base_de_datos_clima.xlsx
-        PROCESSED_CLIMATE_DATA_PATH: datos_climaticos_procesados.xlsx
+        PROCESSED_CLIMATE_DATA_PATH: datos_climaticos.xlsx
       run: |
         python scripts/preprocess_climate_data.py
 
     - name: Preprocess siembra data
       env:
         SIEMBRA_DATA_PATH: consolidado_siembra.xlsx
-        PROCESSED_SIEMBRA_DATA_PATH: datos_mensuales_siembras.xlsx
+        PROCESSED_SIEMBRA_DATA_PATH: datos_siembra_mensuales.xlsx
       run: |
         python scripts/preprocess_siembra_data.py
 
@@ -72,7 +72,7 @@ jobs:
     - name: Preprocess cosecha data
       env:
         COSECHA_DATA_PATH: consolidado_cosecha.xlsx
-        PROCESSED_COSECHA_DATA_PATH: datos_cosechada_mensuales.xlsx
+        PROCESSED_COSECHA_DATA_PATH: datos_cosecha_mensuales.xlsx
       run: |
         python scripts/preprocess_cosecha_data.py
 

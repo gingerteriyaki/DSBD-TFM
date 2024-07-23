@@ -72,7 +72,7 @@ for hoja in hojas:
 datos_df = pd.DataFrame(datos)
 
 # Guardar los datos preprocesados en un nuevo archivo Excel
-output_path = os.environ.get('PROCESSED_COSECHA_DATA_PATH', 'datos_cosechada_mensuales.xlsx')
+output_path = os.environ.get('PROCESSED_COSECHA_DATA_PATH', 'datos_cosecha_mensuales.xlsx')
 datos_df.to_excel(output_path, index=False)
 
 print(f"Datos de cosecha preprocesados y guardados en {output_path}")
