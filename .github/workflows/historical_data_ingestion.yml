@@ -21,17 +21,27 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests pandas openpyxl boto3
 
-    - name: Get climate data
+    - name: Download climate data
       run: |
         python scripts/get_climate_data.py
 
-    - name: Get agriculture data
+    - name: Download agriculture data
       run: |
-        python scripts/get_agriculture_data.py
+        python scripts/download_agriculture_data.py
 
-    - name: Preprocess data
+    - name: Preprocess historical agricultural data
+      env:
+        HISTORICAL_DATA_PATH: consolidado_agricola.xlsx
+        PROCESSED_DATA_PATH: datos_consolidados.xlsx
       run: |
-        python scripts/preprocess_data.py
+        python scripts/preprocess_historical_agricultural_data.py
+
+    - name: Preprocess climate data
+      env:
+        CLIMATE_DATA_PATH: base_de_datos_clima.xlsx
+        PROCESSED_CLIMATE_DATA_PATH: datos_climaticos_procesados.xlsx
+      run: |
+        python scripts/preprocess_climate_data.py
 
     - name: Upload to DigitalOcean Spaces
       env:
