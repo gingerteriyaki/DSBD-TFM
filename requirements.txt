@@ -1,0 +1,7 @@
+requests
+pandas
+openpyxl
+boto3
+xlrd
+matplotlib
+scikit-learn
