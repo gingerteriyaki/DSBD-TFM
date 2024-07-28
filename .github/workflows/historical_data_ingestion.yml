@@ -82,4 +82,10 @@ jobs:
         SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
       run: |
         python scripts/calculate_and_upload_monthly_proportions.py
-
+ 
+    - name: Upload data
+      env:
+        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+      run: |
+        python scripts/upload_data.py
