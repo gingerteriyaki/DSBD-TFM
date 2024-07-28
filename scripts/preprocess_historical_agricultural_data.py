@@ -63,11 +63,14 @@ for hoja in hojas:
 
     # Consolidar los registros para cada región
     for region in ['NORTE', 'NORDESTE', 'NOROESTE', 'NORCENTRAL', 'CENTRAL', 'SUR', 'SUROESTE', 'ESTE']:
+        cosecha_valor = registros['cosecha'].get(region)
+        if year in [2021, 2022]:
+            cosecha_valor = cosecha_valor / 12 if cosecha_valor else None
         datos.append({
             'YEAR': year,
             'REGION': region,
             'SIEMBRA': registros['siembra'].get(region),
-            'COSECHA': registros['cosecha'].get(region),
+            'COSECHA': cosecha_valor,
             'PRODUCCION': registros['produccion'].get(region)
         })
 
@@ -78,7 +81,7 @@ datos_df = pd.DataFrame(datos)
 datos_df = datos_df[['YEAR', 'REGION', 'SIEMBRA', 'COSECHA', 'PRODUCCION']]
 
 # Guardar los datos extraídos en un nuevo archivo Excel
-output_path = os.environ.get('PROCESSED_DATA_PATH', 'datos_agricola_consolidados.csv')
+output_path = os.environ.get('PROCESSED_DATA_PATH', 'datos_agricola_consolidados_mod.xlsx')
 datos_df.to_excel(output_path, index=False)
 
 print(f"Datos preprocesados y guardados en {output_path}")
