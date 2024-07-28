@@ -1,61 +1,110 @@
-# Python Bytecode
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 
-# Configuración de Entorno
-.env
+# C extensions
+*.so
 
-# Archivos de Logs
-*.log
-
-# Archivos Temporales
-*.tmp
-*.bak
-*.swp
-*.swo
-
-# Archivos de Notebooks
-.ipynb_checkpoints
-
-# Archivos de sistema
-.DS_Store
-Thumbs.db
-
-# Archivos de Configuración del Editor
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Archivos de Paquetes
-*.egg
-*.egg-info/
-dist/
+# Distribution / packaging
+.Python
 build/
-*.whl
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Dependencias de virtualenv
+# Virtual environments
 venv/
 ENV/
 env.bak/
 venv.bak/
 
-# Directorios de salida
-out/
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
 target/
 
-# Archivos del proyecto específico
-path/to/unwanted/folder/
-path/to/another_unwanted_folder/
-path/to/unwanted/file.ext
-path/to/another_unwanted_file.ext
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Archivos de DigitalOcean Spaces
-base_de_datos_clima_cleaned.csv
-datos_agricola_consolidados_mod.xlsx
-datos_climaticos.xlsx
-datos_siembra_mensuales.xlsx
-datos_produccion_mensuales.xlsx
-datos_cosecha_mensuales_mod.xlsx
-datos_mensuales_por_region.xlsx
+# IPython
+.profile_default/
+ipython_config.py
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.spyderproject
+.spyproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
