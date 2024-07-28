@@ -13,9 +13,9 @@ def configurar_cliente_boto3(access_key, secret_key):
     session = boto3.session.Session()
     client = session.client('s3',
                             region_name='fra1',
-                            endpoint_url='https://climaplatano.fra1.digitaloceanspaces.com',
-                            aws_access_key_id=os.environ['SPACES_ACCESS_KEY_ID'],
-                            aws_secret_access_key=os.environ['SPACES_SECRET_ACCESS_KEY'])
+                            endpoint_url='https://fra1.digitaloceanspaces.com',
+                            aws_access_key_id=access_key,
+                            aws_secret_access_key=secret_key)
     return client
 
 def leer_archivos():
@@ -39,12 +39,12 @@ def calcular_proporciones_distribuidas(df_mensual, df_consolidado, columna):
         for idx, row in df_consolidado_anual.iterrows():
             valores_mensuales = proporciones_mensuales * row[columna]
             for mes, valor in enumerate(valores_mensuales, start=1):
-                df_resultado = df_resultado.append({
+                df_resultado = pd.concat([df_resultado, pd.DataFrame([{
                     'YEAR': year,
                     'REGION': row['REGION'],
                     'MONTH': f"{mes:02d}",
                     f'{columna}_MENSUAL': valor
-                }, ignore_index=True)
+                }])], ignore_index=True)
     return df_resultado
 
 def generar_archivo_final(siembra_resultado, produccion_resultado, cosecha_resultado):
