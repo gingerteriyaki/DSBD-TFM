@@ -2,6 +2,7 @@ requests
 pandas
 openpyxl
 boto3
+python-dotenv
 xlrd
 matplotlib
 scikit-learn

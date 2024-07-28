@@ -51,6 +51,9 @@ for hoja in hojas:
     # Extraer los datos de los meses (asumiendo que las columnas de meses están en los índices 1 a 12)
     row = df.iloc[idx_producto, 1:13]
 
+    # Dividir los valores mensuales entre 12
+    row = row / 12
+
     # Agregar los datos al diccionario
     datos.append({
         'YEAR': year,
@@ -65,7 +68,8 @@ for hoja in hojas:
         '09': row[8],
         '10': row[9],
         '11': row[10],
-        '12': row[11]
+        '12': row[11],
+        'TOTAL': row.sum()
     })
 
 # Convertir los datos a DataFrame para su análisis

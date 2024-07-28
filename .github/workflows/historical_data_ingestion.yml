@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests pandas openpyxl boto3 xlrd
+        pip install requests pandas openpyxl boto3 xlrd python-dotenv
 
     - name: Download climate data
       run: |
@@ -44,7 +44,7 @@ jobs:
     - name: Preprocess historical agricultural data
       env:
         HISTORICAL_DATA_PATH: consolidado_agricola.xlsx
-        PROCESSED_DATA_PATH: datos_agricola_consolidados.xlsx
+        PROCESSED_DATA_PATH: datos_agricola_consolidados_mod.xlsx
       run: |
         python scripts/preprocess_historical_agricultural_data.py
 
@@ -72,13 +72,14 @@ jobs:
     - name: Preprocess cosecha data
       env:
         COSECHA_DATA_PATH: consolidado_cosecha.xlsx
-        PROCESSED_COSECHA_DATA_PATH: datos_cosecha_mensuales.xlsx
+        PROCESSED_COSECHA_DATA_PATH: datos_cosecha_mensuales_mod.xlsx
       run: |
         python scripts/preprocess_cosecha_data.py
 
-    - name: Upload to DigitalOcean Spaces
+    - name: Calculate and upload monthly proportions
       env:
         SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
         SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
       run: |
-        python scripts/upload_to_spaces.py
+        python scripts/calculate_and_upload_monthly_proportions.py
+
