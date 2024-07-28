@@ -1,0 +1,61 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Configuración de Entorno
+.env
+
+# Archivos de Logs
+*.log
+
+# Archivos Temporales
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Archivos de Notebooks
+.ipynb_checkpoints
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Configuración del Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de Paquetes
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Dependencias de virtualenv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Directorios de salida
+out/
+target/
+
+# Archivos del proyecto específico
+path/to/unwanted/folder/
+path/to/another_unwanted_folder/
+path/to/unwanted/file.ext
+path/to/another_unwanted_file.ext
+
+# Archivos de DigitalOcean Spaces
+base_de_datos_clima_cleaned.csv
+datos_agricola_consolidados_mod.xlsx
+datos_climaticos.xlsx
+datos_siembra_mensuales.xlsx
+datos_produccion_mensuales.xlsx
+datos_cosecha_mensuales_mod.xlsx
+datos_mensuales_por_region.xlsx
