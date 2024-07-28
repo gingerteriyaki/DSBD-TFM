@@ -7,8 +7,8 @@ def upload_to_spaces():
     client = session.client('s3',
                             region_name='fra1',
                             endpoint_url='https://climaplatano.fra1.digitaloceanspaces.com',
-                            aws_access_key_id=os.environ['DO00DAZTRTXVBN4KUZMU'],
-                            aws_secret_access_key=os.environ['wC98p12ouNcoFDJTWcf7RrVc0GOFZaZT6pUSZ7LggQo'])
+                            aws_access_key_id=os.environ['SPACES_ACCESS_KEY_ID'],
+                            aws_secret_access_key=os.environ['SPACES_SECRET_ACCESS_KEY'])
 
     space_name = 'climaplatano'  # Asegúrate de que esto sea correcto
 
