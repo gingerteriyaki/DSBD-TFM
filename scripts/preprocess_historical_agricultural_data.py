@@ -64,7 +64,8 @@ for hoja in hojas:
     # Consolidar los registros para cada región
     for region in ['NORTE', 'NORDESTE', 'NOROESTE', 'NORCENTRAL', 'CENTRAL', 'SUR', 'SUROESTE', 'ESTE']:
         cosecha_valor = registros['cosecha'].get(region)
-
+        if year in [2021, 2022]:
+            cosecha_valor = cosecha_valor / 12 if cosecha_valor else None
         datos.append({
             'YEAR': year,
             'REGION': region,
