@@ -25,9 +25,10 @@ def download_files():
         'datos_climaticos.xlsx': 'datos_climaticos.xlsx',
         'datos_siembra_mensuales.xlsx': 'datos_siembra_mensuales.xlsx',
         'datos_produccion_mensuales.xlsx': 'datos_produccion_mensuales.xlsx',
-        'datos_cosecha_mensuales.xlsx': 'datos_cosecha_mensuales.xlsx'
-		'datos_mensuales_por_region.xlsx': 'datos_mensuales_por_region.xlsx'
+        'datos_cosecha_mensuales.xlsx': 'datos_cosecha_mensuales.xlsx',
+        'datos_mensuales_por_region.xlsx': 'datos_mensuales_por_region.xlsx'
     }
+
 
     bucket_name = 'climaplatano'
 

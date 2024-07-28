@@ -6,3 +6,4 @@ python-dotenv
 xlrd
 matplotlib
 scikit-learn
+python-dotenv
