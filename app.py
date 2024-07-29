@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 import boto3
 import pandas as pd
 import os
-from sklearn.externals import joblib
+import joblib
+import numpy as np
 
 app = Flask(__name__)
 
@@ -47,43 +48,73 @@ def obtener_datos_climaticos():
     
     return jsonify(datos_json)
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    client.download_file(bucket_name, file_names['modelo_gbr'], 'modelo_gbr.pkl')
+@app.route('/predict', methods=['GET'])
+def predict_rendimiento():
+    # Descargar y cargar el modelo desde DigitalOcean Spaces
+    client.download_file(bucket_name, file_names['model'], 'modelo_gbr.pkl')
     model = joblib.load('modelo_gbr.pkl')
-    
-    data = request.json
-    data_defaults = get_defaults()
-    
-    for key, value in data.items():
-        if value is not None:
-            data_defaults[key] = value
-    
-    df = pd.DataFrame([data_defaults])
-    prediction = model.predict(df)[0]
-    
-    return jsonify({'rendimiento_predicho': prediction})
 
-def get_defaults():
-    client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
-    df_agricola = pd.read_excel('data_agricola.xlsx')
-    
+    # Descargar datos para obtener valores por defecto
     client.download_file(bucket_name, file_names['datos_climaticos'], 'datos_climaticos.xlsx')
-    df_climaticos = pd.read_excel('datos_climaticos.xlsx')
-    
-    df_agricola.columns = df_agricola.columns.str.lower()
-    df_climaticos.columns = df_climaticos.columns.str.lower()
-    
-    df_merged = pd.merge(df_agricola, df_climaticos, on=['year', 'month', 'region'], how='inner')
-    
-    last_year = df_merged['year'].max()
-    df_last_year = df_merged[df_merged['year'] == last_year]
-    
-    defaults = df_last_year.mean(numeric_only=True).to_dict()
-    
-    # Calcular la región más común como predeterminada
-    defaults['region'] = df_last_year['region'].mode()[0]  # La región más frecuente
-    
+    client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
+
+    datos_climaticos = pd.read_excel('datos_climaticos.xlsx')
+    datos_agricola = pd.read_excel('data_agricola.xlsx')
+
+    # Obtener el último año disponible en los datos
+    ultimo_año = datos_climaticos['year'].max()
+
+    # Obtener los parámetros de la solicitud, usando valores predeterminados cuando sea necesario
+    year = request.args.get('year', default=ultimo_año, type=int)
+    month = request.args.get('month', default=int(datos_climaticos['month'].mode()[0]), type=int)
+    region = request.args.get('region', default=datos_climaticos['region'].mode()[0], type=str)
+    siembra_mensual = request.args.get('siembra_mensual', default=None, type=float)
+    cosecha_mensual = request.args.get('cosecha_mensual', default=None, type=float)
+    precipitation = request.args.get('precipitation', default=None, type=float)
+    max_temp = request.args.get('max_temp', default=None, type=float)
+    min_temp = request.args.get('min_temp', default=None, type=float)
+    humidity = request.args.get('humidity', default=None, type=float)
+
+    # Obtener valores por defecto si no se proporcionaron
+    defaults = get_defaults(datos_agricola, datos_climaticos, ultimo_año, month, region)
+    siembra_mensual = siembra_mensual if siembra_mensual is not None else defaults['siembra_mensual']
+    cosecha_mensual = cosecha_mensual if cosecha_mensual is not None else defaults['cosecha_mensual']
+    precipitation = precipitation if precipitation is not None else defaults['precipitation']
+    max_temp = max_temp if max_temp is not None else defaults['max_temp']
+    min_temp = min_temp if min_temp is not None else defaults['min_temp']
+    humidity = humidity if humidity is not None else defaults['humidity']
+
+    # Crear DataFrame con los valores proporcionados o por defecto
+    data = pd.DataFrame({
+        'year': [year],
+        'month': [month],
+        'region': [region],
+        'siembra_mensual': [siembra_mensual],
+        'cosecha_mensual': [cosecha_mensual],
+        'precipitation': [precipitation],
+        'max_temp': [max_temp],
+        'min_temp': [min_temp],
+        'humidity': [humidity]
+    })
+
+    # Hacer predicción
+    prediccion = model.predict(data)
+    resultado = {'prediccion_rendimiento': prediccion[0]}
+
+    return jsonify(resultado)
+
+def get_defaults(datos_agricola, datos_climaticos, year, month, region):
+    promedio_agricola = datos_agricola[(datos_agricola['year'] == year) & (datos_agricola['month'] == month) & (datos_agricola['region'] == region)].mean(numeric_only=True)
+    promedio_climatico = datos_climaticos[(datos_climaticos['year'] == year) & (datos_climaticos['month'] == month) & (datos_climaticos['region'] == region)].mean(numeric_only=True)
+
+    defaults = {
+        'siembra_mensual': promedio_agricola['siembra_mensual'],
+        'cosecha_mensual': promedio_agricola['cosecha_mensual'],
+        'precipitation': promedio_climatico['precipitation'],
+        'max_temp': promedio_climatico['max_temp'],
+        'min_temp': promedio_climatico['min_temp'],
+        'humidity': promedio_climatico['humidity']
+    }
     return defaults
 
 if __name__ == '__main__':
