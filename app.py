@@ -3,7 +3,6 @@ import boto3
 import pandas as pd
 import os
 import joblib
-import numpy as np
 
 app = Flask(__name__)
 
@@ -29,7 +28,7 @@ def obtener_datos_mensuales():
     
     # Leer el archivo Excel
     df = pd.read_excel('data_agricola.xlsx')
-
+    
     # Convertir a JSON
     datos_json = df.to_json(orient='records')
     
@@ -42,7 +41,7 @@ def obtener_datos_climaticos():
     
     # Leer el archivo Excel
     df = pd.read_excel('datos_climaticos.xlsx')
-
+    
     # Convertir a JSON
     datos_json = df.to_json(orient='records')
     
@@ -59,11 +58,16 @@ def predict_rendimiento():
     client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
 
     datos_climaticos = pd.read_excel('datos_climaticos.xlsx')
-    datos_climaticos = datos_climaticos.columns.str.lower()
-
     datos_agricola = pd.read_excel('data_agricola.xlsx')
-    datos_agricola = datos_agricola.columns.str.lower()
-    
+
+    # Convertir las columnas a minúsculas para asegurar la consistencia
+    datos_climaticos.columns = datos_climaticos.columns.str.lower()
+    datos_agricola.columns = datos_agricola.columns.str.lower()
+
+    # Imprimir las columnas para verificar
+    print("Datos climáticos columnas:", datos_climaticos.columns)
+    print("Datos agrícolas columnas:", datos_agricola.columns)
+
     # Obtener el último año disponible en los datos
     ultimo_año = datos_climaticos['year'].max()
 
@@ -81,7 +85,7 @@ def predict_rendimiento():
     # Obtener valores por defecto si no se proporcionaron
     defaults = get_defaults(datos_agricola, datos_climaticos, ultimo_año, month, region)
     siembra_mensual = siembra_mensual if siembra_mensual is not None else defaults['siembra_mensual']
-    cosecha_mensual = cosecha_mensual if cosecha_mensual is not None else defaults['cosecha_mensual']
+    cosecha_mensual = cosecha_mensual si cosecha_mensual no es Ninguno más valores predeterminados ['cosecha_mensual']
     precipitation = precipitation if precipitation is not None else defaults['precipitation']
     max_temp = max_temp if max_temp is not None else defaults['max_temp']
     min_temp = min_temp if min_temp is not None else defaults['min_temp']
