@@ -11,8 +11,8 @@ def download_files():
     client = session.client('s3',
                             region_name='fra1',
                             endpoint_url='https://climaplatano.fra1.digitaloceanspaces.com',
-                            aws_access_key_id=os.environ['SPACES_ACCESS_KEY_ID'],
-                            aws_secret_access_key=os.environ['SPACES_SECRET_ACCESS_KEY'])
+                            aws_access_key_id=os.environ['DO00DAZTRTXVBN4KUZMU'],
+                            aws_secret_access_key=os.environ['wC98p12ouNcoFDJTWcf7RrVc0GOFZaZT6pUSZ7LggQo'])
 
     # Función para descargar un archivo desde DigitalOcean Spaces
     def download_file_from_space(bucket_name, object_name, file_name):
