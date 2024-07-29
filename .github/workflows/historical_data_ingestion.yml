@@ -79,6 +79,11 @@ jobs:
     - name: Calculate and upload monthly proportions
       run: |
         python scripts/calculate_and_upload_monthly_proportions.py
+        
+    - name: Train model
+      run: |
+        python scripts/train_model.py
+
 
     - name: Upload to DigitalOcean Spaces
       env:

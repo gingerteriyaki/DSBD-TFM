@@ -19,7 +19,8 @@ def upload_to_spaces():
         'datos_siembra_mensuales.xlsx',
         'datos_produccion_mensuales.xlsx',
         'datos_cosecha_mensuales.xlsx',
-        'data_agricola.xlsx'
+        'data_agricola.xlsx',
+        'modelo_gbr.pkl'
     ]
 
     for file_name in files_to_upload:
