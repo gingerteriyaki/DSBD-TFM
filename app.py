@@ -51,7 +51,7 @@ def obtener_datos_climaticos():
 @app.route('/predict', methods=['GET'])
 def predict_rendimiento():
     # Descargar y cargar el modelo desde DigitalOcean Spaces
-    client.download_file(bucket_name, file_names['model'], 'modelo_gbr.pkl')
+    client.download_file(bucket_name, file_names['modelo_gbr'], 'modelo_gbr.pkl')
     model = joblib.load('modelo_gbr.pkl')
 
     # Descargar datos para obtener valores por defecto
