@@ -22,7 +22,7 @@ def leer_archivos():
     siembra_mensual = pd.read_excel('datos_siembra_mensuales.xlsx')
     produccion_mensual = pd.read_excel('datos_produccion_mensuales.xlsx')
     cosecha_mensual = pd.read_excel('datos_cosecha_mensuales.xlsx')
-    agricola_consolidado = pd.read_excel('consolidado_agricola_mensual.xlsx')
+    agricola_consolidado = pd.read_excel('consolidado_agricola_general.xlsx')
     return siembra_mensual, produccion_mensual, cosecha_mensual, agricola_consolidado
 
 def calcular_totales_anuales(df):
@@ -59,7 +59,7 @@ def generar_archivo_final(siembra_resultado, produccion_resultado, cosecha_resul
 
 def subir_archivo(client, archivo_final):
     bucket_name = 'climaplatano'
-    object_name = 'datos_mensuales_por_region.xlsx'
+    object_name = 'data_agricola.xlsx'
     client.upload_file(archivo_final, bucket_name, object_name)
     print(f"Archivo {archivo_final} subido a DigitalOcean Spaces como {object_name}")
 

@@ -14,7 +14,7 @@ def upload_to_spaces():
 
     # Lista de archivos a subir
     files_to_upload = [
-        'consolidado_agricola_mensual.xlsx',
+        'consolidado_agricola_general.xlsx',
         'datos_climaticos.xlsx',
         'datos_siembra_mensuales.xlsx',
         'datos_produccion_mensuales.xlsx',
