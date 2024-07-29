@@ -86,12 +86,12 @@ if __name__ == "__main__":
     session = boto3.session.Session()
     client = session.client('s3',
                             region_name='fra1',
-                            endpoint_url='https://fra1.digitaloceanspaces.com',
+                            endpoint_url='https://climaplatano.fra1.digitaloceanspaces.com',
                             aws_access_key_id=os.environ['SPACES_ACCESS_KEY_ID'],
                             aws_secret_access_key=os.environ['SPACES_SECRET_ACCESS_KEY'])
 
-    bucket_name = 'climaplatano'
-    object_name = 'combined_climate_data.xlsx'
+    space_name = 'climaplatano' 
+    object_name = 'datos_climaticos.xlsx'
 
     try:
         client.upload_file(output_file_path, bucket_name, object_name)
