@@ -26,7 +26,7 @@ def buscar_producto(df, start_idx, keyword):
     return -1
 
 # Cargar el archivo Excel desde una ruta proporcionada como variable de entorno
-archivo = os.environ.get('HISTORICAL_DATA_PATH', 'consolidado_agricola.xlsx')
+archivo = os.environ.get('HISTORICAL_DATA_PATH', 'datos_agricola_consolidados.xlsx')
 excel = pd.ExcelFile(archivo)
 
 # Definir las hojas que vamos a procesar (solo las del año 2011 en adelante)
