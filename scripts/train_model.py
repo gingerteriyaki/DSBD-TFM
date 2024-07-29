@@ -8,6 +8,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 import os
+import sklearn
+
+print(f"scikit-learn version: {sklearn.__version__}")
 
 # Leer los archivos de Excel y convertir las columnas a minúsculas
 archivo_datos_agricolas = os.environ.get('DATOS_AGRICOLAS_PATH', 'data_agricola.xlsx')
