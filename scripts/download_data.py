@@ -21,10 +21,6 @@ def download_files():
 
     # Nombres de los archivos en el bucket y local
     files_to_download = {
-        'datos_agricola_consolidados_mod.xlsx': 'datos_agricola_consolidados_mod.xlsx',
-        'datos_climaticos.xlsx': 'datos_climaticos.xlsx',
-        'datos_siembra_mensuales.xlsx': 'datos_siembra_mensuales.xlsx',
-        'datos_produccion_mensuales.xlsx': 'datos_produccion_mensuales.xlsx',
         'datos_cosecha_mensuales_mod.xlsx': 'datos_cosecha_mensuales_mod.xlsx',
         'datos_mensuales_por_region.xlsx': 'datos_mensuales_por_region.xlsx'
     }
