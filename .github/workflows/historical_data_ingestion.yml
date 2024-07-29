@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests pandas openpyxl boto3 xlrd
+        pip install -r requirements.txt
 
     - name: Download climate data and preprocess
       run: |
