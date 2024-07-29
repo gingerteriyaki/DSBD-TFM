@@ -21,8 +21,8 @@ def configurar_cliente_boto3(access_key, secret_key):
 def leer_archivos():
     siembra_mensual = pd.read_excel('datos_siembra_mensuales.xlsx')
     produccion_mensual = pd.read_excel('datos_produccion_mensuales.xlsx')
-    cosecha_mensual = pd.read_excel('datos_cosecha_mensuales_mod.xlsx')
-    agricola_consolidado = pd.read_excel('datos_agricola_consolidados_mod.xlsx')
+    cosecha_mensual = pd.read_excel('datos_cosecha_mensuales.xlsx')
+    agricola_consolidado = pd.read_excel('consolidado_agricola.xlsx')
     return siembra_mensual, produccion_mensual, cosecha_mensual, agricola_consolidado
 
 def calcular_totales_anuales(df):
