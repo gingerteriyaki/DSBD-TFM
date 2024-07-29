@@ -1,8 +1,5 @@
 import requests
 import pandas as pd
-import boto3
-from botocore.client import Config
-import os
 
 # URLs de los archivos XLSX
 urls = {
@@ -78,23 +75,6 @@ if __name__ == "__main__":
     df_combined = df_combined.merge(df_humidity, on=["year", "month", "region", "provincia"], how="outer")
 
     # Guardar el DataFrame combinado en un archivo Excel temporal
-    output_file_path = 'combined_climate_data.xlsx'
+    output_file_path = 'datos_climaticos.xlsx'
     df_combined.to_excel(output_file_path, index=False)
     print(f"Combined data saved to {output_file_path}")
-
-    # Subir el archivo a DigitalOcean Spaces
-    session = boto3.session.Session()
-    client = session.client('s3',
-                            region_name='fra1',
-                            endpoint_url='https://climaplatano.fra1.digitaloceanspaces.com',
-                            aws_access_key_id=os.environ['DO00DAZTRTXVBN4KUZMU'],
-                            aws_secret_access_key=os.environ['wC98p12ouNcoFDJTWcf7RrVc0GOFZaZT6pUSZ7LggQo'])
-
-    space_name = 'climaplatano' 
-    object_name = 'datos_climaticos.xlsx'
-
-    try:
-        client.upload_file(output_file_path, bucket_name, object_name)
-        print(f"{output_file_path} subido a DigitalOcean Spaces en {bucket_name}/{object_name}")
-    except Exception as e:
-        print(f"Error al subir el archivo a DigitalOcean Spaces: {e}")
