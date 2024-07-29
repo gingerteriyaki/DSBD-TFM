@@ -29,7 +29,6 @@ def obtener_datos_mensuales():
     
     # Leer el archivo Excel
     df = pd.read_excel('data_agricola.xlsx')
-    df.columns = df.columns.str.lower()
 
     # Convertir a JSON
     datos_json = df.to_json(orient='records')
@@ -43,7 +42,7 @@ def obtener_datos_climaticos():
     
     # Leer el archivo Excel
     df = pd.read_excel('datos_climaticos.xlsx')
-    df.columns = df.columns.str.lower()
+
     # Convertir a JSON
     datos_json = df.to_json(orient='records')
     
@@ -60,15 +59,18 @@ def predict_rendimiento():
     client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
 
     datos_climaticos = pd.read_excel('datos_climaticos.xlsx')
-    datos_agricola = pd.read_excel('data_agricola.xlsx')
+    datos_climaticos = datos_climaticos.columns.str.lower()
 
+    datos_agricola = pd.read_excel('data_agricola.xlsx')
+    datos_agricola = datos_agricola.columns.str.lower()
+    
     # Obtener el último año disponible en los datos
-    ultimo_año = datos_climaticos['YEAR'].max()
+    ultimo_año = datos_climaticos['year'].max()
 
     # Obtener los parámetros de la solicitud, usando valores predeterminados cuando sea necesario
     year = request.args.get('year', default=ultimo_año, type=int)
-    month = request.args.get('month', default=int(datos_climaticos['MONTH'].mode()[0]), type=int)
-    region = request.args.get('region', default=datos_climaticos['REGION'].mode()[0], type=str)
+    month = request.args.get('month', default=int(datos_climaticos['month'].mode()[0]), type=int)
+    region = request.args.get('region', default=datos_climaticos['region'].mode()[0], type=str)
     siembra_mensual = request.args.get('siembra_mensual', default=None, type=float)
     cosecha_mensual = request.args.get('cosecha_mensual', default=None, type=float)
     precipitation = request.args.get('precipitation', default=None, type=float)
@@ -105,8 +107,8 @@ def predict_rendimiento():
     return jsonify(resultado)
 
 def get_defaults(datos_agricola, datos_climaticos, year, month, region):
-    promedio_agricola = datos_agricola[(datos_agricola['YEAR'] == year) & (datos_agricola['MONTH'] == month) & (datos_agricola['REGION'] == region)].mean(numeric_only=True)
-    promedio_climatico = datos_climaticos[(datos_climaticos['YEAR'] == year) & (datos_climaticos['MONTH'] == month) & (datos_climaticos['REGION'] == region)].mean(numeric_only=True)
+    promedio_agricola = datos_agricola[(datos_agricola['year'] == year) & (datos_agricola['month'] == month) & (datos_agricola['region'] == region)].mean(numeric_only=True)
+    promedio_climatico = datos_climaticos[(datos_climaticos['year'] == year) & (datos_climaticos['month'] == month) & (datos_climaticos['region'] == region)].mean(numeric_only=True)
 
     defaults = {
         'siembra_mensual': promedio_agricola['siembra_mensual'],
