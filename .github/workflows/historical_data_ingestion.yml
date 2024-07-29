@@ -43,8 +43,8 @@ jobs:
 
     - name: Preprocess historical agricultural data
       env:
-        HISTORICAL_DATA_PATH: consolidado_agricola.xlsx
-        PROCESSED_DATA_PATH: datos_agricola_consolidados.xlsx
+        HISTORICAL_DATA_PATH: datos_agricola_consolidados.xlsx
+        PROCESSED_DATA_PATH: consolidado_agricola.xlsx
       run: |
         python scripts/preprocess_historical_agricultural_data.py
 
