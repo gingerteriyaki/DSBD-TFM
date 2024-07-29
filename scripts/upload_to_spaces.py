@@ -18,7 +18,8 @@ def upload_to_spaces():
         'datos_climaticos.xlsx',
         'datos_siembra_mensuales.xlsx',
         'datos_produccion_mensuales.xlsx',
-        'datos_cosecha_mensuales.xlsx'
+        'datos_cosecha_mensuales.xlsx',
+        'data_agricola.xlsx'
     ]
 
     for file_name in files_to_upload:
