@@ -85,7 +85,7 @@ def predict_rendimiento():
     # Obtener valores por defecto si no se proporcionaron
     defaults = get_defaults(datos_agricola, datos_climaticos, ultimo_año, month, region)
     siembra_mensual = siembra_mensual if siembra_mensual is not None else defaults['siembra_mensual']
-    cosecha_mensual = cosecha_mensual si cosecha_mensual no es Ninguno más valores predeterminados ['cosecha_mensual']
+    cosecha_mensual = cosecha_mensual if cosecha_mensual is not None else defaults['cosecha_mensual']
     precipitation = precipitation if precipitation is not None else defaults['precipitation']
     max_temp = max_temp if max_temp is not None else defaults['max_temp']
     min_temp = min_temp if min_temp is not None else defaults['min_temp']
