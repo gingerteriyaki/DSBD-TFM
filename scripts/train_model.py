@@ -8,13 +8,14 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 
+
 # Leer los archivos de Excel y convertir las columnas a minúsculas
-archivo_datos_agricolas = 'data/data_agricola.xlsx'
+archivo_datos_agricolas = os.environ.get('DATOS_AGRICOLAS_PATH', 'data_agricola.xlsx')
 datos_region_mes = pd.read_excel(archivo_datos_agricolas)
 datos_region_mes.columns = datos_region_mes.columns.str.lower()
 
 # Archivo con datos climáticos mensuales
-archivo_datos_climaticos = 'data/datos_climaticos.xlsx'
+archivo_datos_climaticos = os.environ.get('DATOS_CLIMATICOS_PATH', 'datos_climaticos.xlsx')
 datos_climaticos = pd.read_excel(archivo_datos_climaticos)
 datos_climaticos.columns = datos_climaticos.columns.str.lower()
 
