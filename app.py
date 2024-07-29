@@ -29,7 +29,8 @@ def obtener_datos_mensuales():
     
     # Leer el archivo Excel
     df = pd.read_excel('data_agricola.xlsx')
-    
+    df.columns = df.columns.str.lower()
+
     # Convertir a JSON
     datos_json = df.to_json(orient='records')
     
@@ -42,7 +43,7 @@ def obtener_datos_climaticos():
     
     # Leer el archivo Excel
     df = pd.read_excel('datos_climaticos.xlsx')
-    
+    df.columns = df.columns.str.lower()
     # Convertir a JSON
     datos_json = df.to_json(orient='records')
     
