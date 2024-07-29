@@ -3,6 +3,7 @@ import boto3
 import pandas as pd
 import os
 import joblib
+import numpy as np
 
 app = Flask(__name__)
 
@@ -64,9 +65,9 @@ def predict_rendimiento():
     datos_climaticos.columns = datos_climaticos.columns.str.lower()
     datos_agricola.columns = datos_agricola.columns.str.lower()
 
-    # Imprimir las columnas para verificar
-    print("Datos climáticos columnas:", datos_climaticos.columns)
-    print("Datos agrícolas columnas:", datos_agricola.columns)
+    # Verificar nombres de las columnas
+    print(f"Datos climáticos columnas: {datos_climaticos.columns}")
+    print(f"Datos agrícolas columnas: {datos_agricola.columns}")
 
     # Obtener el último año disponible en los datos
     ultimo_año = datos_climaticos['year'].max()
@@ -91,6 +92,12 @@ def predict_rendimiento():
     min_temp = min_temp if min_temp is not None else defaults['min_temp']
     humidity = humidity if humidity is not None else defaults['humidity']
 
+    # Calcular características adicionales
+    temp_diff = max_temp - min_temp
+    precip_per_humidity = precipitation / humidity
+    siembra_vs_cosecha = siembra_mensual / cosecha_mensual
+    produccion_vs_siembra = defaults['produccion_mensual'] / siembra_mensual
+
     # Crear DataFrame con los valores proporcionados o por defecto
     data = pd.DataFrame({
         'year': [year],
@@ -101,7 +108,11 @@ def predict_rendimiento():
         'precipitation': [precipitation],
         'max_temp': [max_temp],
         'min_temp': [min_temp],
-        'humidity': [humidity]
+        'humidity': [humidity],
+        'temp_diff': [temp_diff],
+        'precip_per_humidity': [precip_per_humidity],
+        'siembra_vs_cosecha': [siembra_vs_cosecha],
+        'produccion_vs_siembra': [produccion_vs_siembra]
     })
 
     # Hacer predicción
@@ -117,6 +128,7 @@ def get_defaults(datos_agricola, datos_climaticos, year, month, region):
     defaults = {
         'siembra_mensual': promedio_agricola['siembra_mensual'],
         'cosecha_mensual': promedio_agricola['cosecha_mensual'],
+        'produccion_mensual': promedio_agricola['produccion_mensual'],
         'precipitation': promedio_climatico['precipitation'],
         'max_temp': promedio_climatico['max_temp'],
         'min_temp': promedio_climatico['min_temp'],
