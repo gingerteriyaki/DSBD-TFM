@@ -1,28 +1,33 @@
-document.getElementById('prediction-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('prediction-form');
+    
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
-    fetch('/predict', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        const resultDiv = document.getElementById('prediction-result');
-        if (result.error) {
-            resultDiv.textContent = 'Error: ' + result.error;
-        } else {
-            resultDiv.textContent = 'Rendimiento Predicho: ' + result.rendimiento_predicho;
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                document.getElementById('prediction-result').innerHTML = 
+                    `<p>Rendimiento Predicho: ${result.rendimiento_predicho}</p>`;
+            } else {
+                document.getElementById('prediction-result').innerHTML = 
+                    `<p>Error: ${result.error}</p>`;
+            }
+        } catch (error) {
+            document.getElementById('prediction-result').innerHTML = 
+                `<p>Error: ${error.message}</p>`;
         }
-    })
-    .catch(error => {
-        document.getElementById('prediction-result').textContent = 'Error: ' + error;
     });
 });
