@@ -6,7 +6,7 @@ python-dotenv
 xlrd
 matplotlib
 scikit-learn==1.3.2
-Flask==2.1.1
+Flask==2.2.5
 scipy
 joblib==1.1.1
 numpy==1.22.3
