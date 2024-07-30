@@ -8,53 +8,18 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Resultado de Predicción de rendimiento del cultivo del plátano</h1>
-        <table class="table table-bordered">
-            <tr>
-                <th>Año</th>
-                <td>{{ resultado.year }}</td>
-            </tr>
-            <tr>
-                <th>Mes</th>
-                <td>{{ resultado.month }}</td>
-            </tr>
-            <tr>
-                <th>Región</th>
-                <td>{{ resultado.region }}</td>
-            </tr>
-            <tr>
-                <th>Siembra Mensual</th>
-                <td>{{ resultado.siembra_mensual }}</td>
-            </tr>
-            <tr>
-                <th>Cosecha Mensual</th>
-                <td>{{ resultado.cosecha_mensual }}</td>
-            </tr>
-            <tr>
-                <th>Producción Mensual</th>
-                <td>{{ resultado.produccion_mensual }}</td>
-            </tr>
-            <tr>
-                <th>Precipitación</th>
-                <td>{{ resultado.precipitation }}</td>
-            </tr>
-            <tr>
-                <th>Temperatura Máxima</th>
-                <td>{{ resultado.max_temp }}</td>
-            </tr>
-            <tr>
-                <th>Temperatura Mínima</th>
-                <td>{{ resultado.min_temp }}</td>
-            </tr>
-            <tr>
-                <th>Humedad</th>
-                <td>{{ resultado.humidity }}</td>
-            </tr>
-            <tr>
-                <th>Predicción de Rendimiento</th>
-                <td>{{ resultado.prediccion_rendimiento }}</td>
-            </tr>
-        </table>
+        <h1>Resultado de Predicción</h1>
+        <p><strong>Año:</strong> {{ resultado.year }}</p>
+        <p><strong>Mes:</strong> {{ resultado.month }}</p>
+        <p><strong>Región:</strong> {{ resultado.region }}</p>
+        <p><strong>Siembra Mensual (tareas):</strong> {{ resultado.siembra_mensual }}</p>
+        <p><strong>Cosecha Mensual (tareas):</strong> {{ resultado.cosecha_mensual }}</p>
+        <p><strong>Producción Mensual (millares):</strong> {{ resultado.produccion_mensual }}</p>
+        <p><strong>Precipitación (mm):</strong> {{ resultado.precipitation }}</p>
+        <p><strong>Humedad (%):</strong> {{ resultado.humidity }}</p>
+        <p><strong>Temperatura Máxima (°C):</strong> {{ resultado.max_temp }}</p>
+        <p><strong>Temperatura Mínima (°C):</strong> {{ resultado.min_temp }}</p>
+        <p><strong>Predicción de Rendimiento:</strong> {{ resultado.prediccion_rendimiento }}</p>
         <a href="/" class="btn btn-primary">Volver</a>
     </div>
 </body>
