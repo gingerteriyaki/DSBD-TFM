@@ -2,66 +2,190 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Formulario de Predicción</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Predicción de Rendimiento</title>
     <style>
-        /* Estilos para los mensajes de error en rojo */
-        .error {
+        .form-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: calc(100% - 10px);
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group input[type="submit"] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .error-message {
             color: red;
+            font-size: 14px;
+        }
+        .resultado-container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+        }
+        .resultado-container h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .resultado-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .resultado-container th, .resultado-container td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <h1>Formulario de Predicción</h1>
-
-    <form action="/predict" method="post">
-        <label for="year">Año *</label>
-        <input type="number" id="year" name="year" min="2011" max="2024" required><br><br>
-
-        <label for="month">Mes *</label>
-        <input type="number" id="month" name="month" min="1" max="12" required><br><br>
-
-        <label for="region">Región *</label>
-        <select id="region" name="region" required>
-            <option value="CENTRAL">CENTRAL</option>                        
-            <option value="ESTE">ESTE</option>
-            <option value="NORCENTRAL">NORCENTRAL</option>
-            <option value="NORDESTE">NORDESTE</option>
-            <option value="NOROESTE">NOROESTE</option>
-            <option value="NORTE">NORTE</option>
-            <option value="SUR">SUR</option>
-            <option value="SUROESTE">SUROESTE</option>
-        </select><br><br>
-
-        <label for="siembra_mensual">Siembra Mensual *</label>
-        <input type="number" id="siembra_mensual" name="siembra_mensual" required> Tareas<br><br>
-
-        <label for="cosecha_mensual">Cosecha Mensual *</label>
-        <input type="number" id="cosecha_mensual" name="cosecha_mensual" required> Tareas<br><br>
-
-        <label for="produccion_mensual">Producción Mensual *</label>
-        <input type="number" id="produccion_mensual" name="produccion_mensual" required> Millares<br><br>
-
-        <label for="precipitation">Precipitación</label>
-        <input type="number" id="precipitation" name="precipitation"> mm<br><br>
-
-        <label for="max_temp">Temperatura Máxima</label>
-        <input type="number" id="max_temp" name="max_temp"> °C<br><br>
-
-        <label for="min_temp">Temperatura Mínima</label>
-        <input type="number" id="min_temp" name="min_temp"> °C<br><br>
-
-        <label for="humidity">Humedad</label>
-        <input type="number" id="humidity" name="humidity"> %<br><br>
-
-        <button type="submit">Predecir</button>
-    </form>
+    <div class="form-container">
+        <h2>Formulario de Predicción de Rendimiento</h2>
+        <form action="/predict" method="POST">
+            <div class="form-group">
+                <label for="year">Año *</label>
+                <select name="year" id="year">
+                    <option value="2011">2011</option>
+                    <option value="2012">2012</option>
+                    <option value="2013">2013</option>
+                    <option value="2014">2014</option>
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="month">Mes *</label>
+                <select name="month" id="month">
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="region">Región *</label>
+                <select name="region" id="region">
+                    <option value="CENTRAL">Central</option>
+                    <option value="ESTE">Este</option>
+                    <option value="NORCENTRAL">Norcentral</option>
+                    <option value="NORDESTE">Nordeste</option>
+                    <option value="NOROESTE">Noroeste</option>
+                    <option value="NORTE">Norte</option>
+                    <option value="SUR">Sur</option>
+                    <option value="SUROESTE">Suroeste</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="siembra_mensual">Siembra Mensual (tareas) *</label>
+                <input type="number" name="siembra_mensual" id="siembra_mensual" required>
+            </div>
+            <div class="form-group">
+                <label for="cosecha_mensual">Cosecha Mensual (tareas) *</label>
+                <input type="number" name="cosecha_mensual" id="cosecha_mensual" required>
+            </div>
+            <div class="form-group">
+                <label for="produccion_mensual">Producción Mensual (millares) *</label>
+                <input type="number" name="produccion_mensual" id="produccion_mensual" required>
+            </div>
+            <div class="form-group">
+                <label for="precipitation">Precipitación (mm)</label>
+                <input type="number" name="precipitation" id="precipitation">
+            </div>
+            <div class="form-group">
+                <label for="max_temp">Temperatura Máxima (°C)</label>
+                <input type="number" name="max_temp" id="max_temp">
+            </div>
+            <div class="form-group">
+                <label for="min_temp">Temperatura Mínima (°C)</label>
+                <input type="number" name="min_temp" id="min_temp">
+            </div>
+            <div class="form-group">
+                <label for="humidity">Humedad (%)</label>
+                <input type="number" name="humidity" id="humidity">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Predecir">
+            </div>
+        </form>
+    </div>
 
     {% if resultado %}
-    <h2>Resultado de Predicción</h2>
-    <p>El rendimiento predicho por el modelo es: {{ resultado.prediccion_rendimiento }}</p>
-
-    <h2>Rendimiento de Cultivo Actual</h2>
-    <p>El rendimiento actual del cultivo es: {{ rendimiento_actual }}</p>
+    <div class="resultado-container">
+        <h3>Resultado de la Predicción</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Predicción de Rendimiento</td>
+                    <td>{{ resultado.prediccion_rendimiento }}</td>
+                </tr>
+                <tr>
+                    <td>Rendimiento de Cultivo Actual</td>
+                    <td>{{ rendimiento_actual }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     {% endif %}
+
 </body>
 </html>
