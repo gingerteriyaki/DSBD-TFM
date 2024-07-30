@@ -1,72 +1,121 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Predicción de Rendimiento Agrícola</title>
+    <title>Predicción de rendimiento de cultivo de plátano</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .required:after {
+            content: " *";
+            color: red;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .input-group > div {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .input-group > div:last-child {
+            margin-right: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Predicción de Rendimiento Agrícola</h1>
-        <form id="prediction-form">
+    <div class="container mt-5">
+        <h1>Predicción de rendimiento de cultivo de plátano</h1>
+        <form id="predictionForm" action="/predict" method="GET">
             <div class="form-group">
-                <label for="nombre">Nombre (Requerido):</label>
-                <input type="text" name="nombre" id="nombre" required>
-                <label for="apellido">Apellido (Requerido):</label>
-                <input type="text" name="apellido" id="apellido" required>
+                <label for="year" class="required">Año</label>
+                <input list="years" name="year" id="year" class="form-control" required>
+                <datalist id="years">
+                    {% for year in range(2011, current_year + 1) %}
+                        <option value="{{ year }}"></option>
+                    {% endfor %}
+                </datalist>
             </div>
-
             <div class="form-group">
-                <label for="region">Región (Requerido):</label>
-                <select name="region" id="region" required>
-                    <option value="CENTRAL">CENTRAL</option>
-                    <option value="ESTE">ESTE</option>
-                    <option value="NORCENTRAL">NORCENTRAL</option>
-                    <option value="NORDESTE">NORDESTE</option>
-                    <option value="NOROESTE">NOROESTE</option>
-                    <option value="NORTE">NORTE</option>
-                    <option value="SUR">SUR</option>
-                    <option value="SUROESTE">SUROESTE</option>
-                </select>
-                <label for="year">Año (Requerido):</label>
-                <input type="number" name="year" id="year" required>
+                <label for="month" class="required">Mes</label>
+                <input list="months" name="month" id="month" class="form-control" required>
+                <datalist id="months">
+                    <option value="Enero"></option>
+                    <option value="Febrero"></option>
+                    <option value="Marzo"></option>
+                    <option value="Abril"></option>
+                    <option value="Mayo"></option>
+                    <option value="Junio"></option>
+                    <option value="Julio"></option>
+                    <option value="Agosto"></option>
+                    <option value="Septiembre"></option>
+                    <option value="Octubre"></option>
+                    <option value="Noviembre"></option>
+                    <option value="Diciembre"></option>
+                </datalist>
             </div>
-
             <div class="form-group">
-                <label for="month">Mes (Requerido):</label>
-                <input type="number" name="month" id="month" required>
-                <label for="siembra_mensual">Siembra Mensual (tareas) (Requerido):</label>
-                <input type="number" name="siembra_mensual" id="siembra_mensual" required>
+                <label for="region" class="required">Región</label>
+                <input type="text" name="region" id="region" class="form-control" required>
             </div>
-
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="siembra_mensual" class="required">Siembra Mensual</label>
+                    <input type="number" name="siembra_mensual" id="siembra_mensual" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="cosecha_mensual" class="required">Cosecha Mensual</label>
+                    <input type="number" name="cosecha_mensual" id="cosecha_mensual" class="form-control" required>
+                </div>
+            </div>
             <div class="form-group">
-                <label for="cosecha_mensual">Cosecha Mensual (tareas) (Requerido):</label>
-                <input type="number" name="cosecha_mensual" id="cosecha_mensual" required>
-                <label for="produccion_mensual">Producción Mensual (millares) (Requerido):</label>
-                <input type="number" name="produccion_mensual" id="produccion_mensual" required>
+                <label for="produccion_mensual" class="required">Producción Mensual</label>
+                <input type="number" name="produccion_mensual" id="produccion_mensual" class="form-control" required>
             </div>
-
-            <div class="form-group">
-                <label for="precipitation">Precipitación (mm) (Opcional):</label>
-                <input type="number" name="precipitation" id="precipitation">
-                <label for="max_temp">Temperatura Máxima (°C) (Opcional):</label>
-                <input type="number" name="max_temp" id="max_temp">
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="precipitation" class="required">Precipitación</label>
+                    <input type="number" name="precipitation" id="precipitation" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="humidity" class="required">Humedad</label>
+                    <input type="number" name="humidity" id="humidity" class="form-control" required>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="min_temp">Temperatura Mínima (°C) (Opcional):</label>
-                <input type="number" name="min_temp" id="min_temp">
-                <label for="humidity">Humedad (%) (Opcional):</label>
-                <input type="number" name="humidity" id="humidity">
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="max_temp" class="required">Temperatura Máxima</label>
+                    <input type="number" name="max_temp" id="max_temp" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="min_temp" class="required">Temperatura Mínima</label>
+                    <input type="number" name="min_temp" id="min_temp" class="form-control" required>
+                </div>
             </div>
-
-            <button type="submit">Predecir Rendimiento</button>
+            <button type="submit" class="btn btn-primary">Predecir</button>
         </form>
-
-        <div id="prediction-result"></div>
     </div>
-
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            const form = event.target;
+            const inputs = form.querySelectorAll('input[required]');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.value) {
+                    valid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            if (!valid) {
+                event.preventDefault();
+                alert('Por favor complete todos los campos requeridos.');
+            }
+        });
+    </script>
 </body>
 </html>
