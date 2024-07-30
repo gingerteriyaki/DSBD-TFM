@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import boto3
-import pandas as pd
 import os
 import joblib
-import numpy as np
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -20,13 +19,18 @@ model_filename = 'modelo_gbr.pkl'
 
 # Descargar y cargar el modelo desde DigitalOcean Spaces
 try:
-    if not os.path.exists('model'):
-        os.makedirs('model')
     client.download_file(bucket_name, model_filename, f'model/{model_filename}')
     model = joblib.load(f'model/{model_filename}')
 except Exception as e:
     print(f"Error al descargar o cargar el modelo: {e}")
-    raise
+
+# Datos climáticos históricos promedio por mes (calculados)
+historical_climate_data = {
+    'precipitation': [59.233, 65.910, 76.814, 110.040, 225.277, 104.683, 143.423, 153.988, 158.602, 166.055, 166.373, 93.170],
+    'max_temp': [28.590, 28.997, 29.728, 30.431, 30.651, 31.769, 31.757, 32.065, 32.026, 31.399, 30.024, 28.710],
+    'min_temp': [17.250, 17.565, 17.869, 18.719, 19.693, 20.623, 20.664, 20.988, 20.537, 20.123, 19.367, 18.088],
+    'humidity': [79.632, 78.329, 76.857, 78.117, 80.691, 79.896, 79.126, 79.851, 81.525, 82.935, 82.974, 81.047]
+}
 
 @app.route('/')
 def index():
@@ -40,7 +44,8 @@ def predict():
         print("Datos recibidos:", data)
 
         # Definir los campos necesarios y opcionales
-        essential_fields = ['nombre', 'apellido', 'year', 'month', 'region', 'siembra_mensual', 'cosecha_mensual', 'produccion_mensual']
+        essential_fields = ['nombre', 'apellido', 'year', 'month', 'region', 'siembra_mensual', 'cosecha_mensual',
+                            'produccion_mensual']
         optional_fields = ['precipitation', 'max_temp', 'min_temp', 'humidity']
 
         # Verificar que los campos esenciales están presentes
@@ -58,14 +63,6 @@ def predict():
             'cosecha_mensual': float,
             'produccion_mensual': float
         })
-
-        # Datos climáticos históricos promedio por mes (se puede ajustar para ser dinámico)
-        historical_climate_data = {
-            'precipitation': [59.233, 65.910, 76.814, 110.040, 225.277, 104.683, 143.423, 153.988, 158.602, 166.055, 166.373, 93.170],
-            'max_temp': [28.590, 28.997, 29.728, 30.431, 30.651, 31.769, 31.757, 32.065, 32.026, 31.399, 30.024, 28.710],
-            'min_temp': [17.250, 17.565, 17.869, 18.719, 19.693, 20.623, 20.664, 20.988, 20.537, 20.123, 19.367, 18.088],
-            'humidity': [79.632, 78.329, 76.857, 78.117, 80.691, 79.896, 79.126, 79.851, 81.525, 82.935, 82.974, 81.047]
-        }
 
         # Estimar datos opcionales si no se proporcionan
         month_index = int(data['month']) - 1  # Índice del mes para acceder a los promedios
