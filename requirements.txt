@@ -10,3 +10,5 @@ Flask==2.1.1
 scipy
 joblib==1.1.1
 numpy==1.22.3
+gunicorn
+flask_cors
