@@ -3,14 +3,10 @@ import boto3
 import pandas as pd
 import os
 import joblib
-import numpy as np
-from dotenv import load_dotenv
-from datetime import datetime
-
-load_dotenv()
 
 app = Flask(__name__)
 
+# Configurar el cliente de S3
 session = boto3.session.Session()
 client = session.client('s3',
                         region_name='fra1',
@@ -25,62 +21,61 @@ file_names = {
     'modelo_gbr': 'modelo_gbr.pkl'
 }
 
-@app.route('/')
-def home():
-    current_year = datetime.now().year
-    return render_template('formulario.html', current_year=current_year)
+@app.route('/', methods=['GET', 'POST'])
+def formulario():
+    if request.method == 'POST':
+        # Procesar los datos del formulario y redirigir a /predict
+        return render_template('formulario.html')
 
-@app.route('/data_agricola', methods=['GET'])
-def obtener_datos_mensuales():
-    client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
-    df = pd.read_excel('data_agricola.xlsx')
-    datos_json = df.to_json(orient='records')
-    return jsonify(datos_json)
+    # Si es GET, simplemente renderiza el formulario
+    return render_template('formulario.html')
 
-@app.route('/datos_climaticos', methods=['GET'])
-def obtener_datos_climaticos():
-    client.download_file(bucket_name, file_names['datos_climaticos'], 'datos_climaticos.xlsx')
-    df = pd.read_excel('datos_climaticos.xlsx')
-    datos_json = df.to_json(orient='records')
-    return jsonify(datos_json)
-
-@app.route('/predict', methods=['GET'])
+@app.route('/predict', methods=['POST'])
 def predict_rendimiento():
+    # Descargar y cargar el modelo desde DigitalOcean Spaces
     client.download_file(bucket_name, file_names['modelo_gbr'], 'modelo_gbr.pkl')
     model = joblib.load('modelo_gbr.pkl')
 
+    # Descargar datos para obtener valores por defecto
     client.download_file(bucket_name, file_names['datos_climaticos'], 'datos_climaticos.xlsx')
     client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
 
     datos_climaticos = pd.read_excel('datos_climaticos.xlsx')
     datos_agricola = pd.read_excel('data_agricola.xlsx')
 
+    # Convertir las columnas a minúsculas para asegurar la consistencia
     datos_climaticos.columns = datos_climaticos.columns.str.lower()
     datos_agricola.columns = datos_agricola.columns.str.lower()
 
-    year = request.args.get('year', type=int)
-    month = request.args.get('month', type=int)
-    region = request.args.get('region', type=str)
-    siembra_mensual = request.args.get('siembra_mensual', type=float)
-    cosecha_mensual = request.args.get('cosecha_mensual', type=float)
-    produccion_mensual = request.args.get('produccion_mensual', type=float)
-    precipitation = request.args.get('precipitation', default=None, type=float)
-    max_temp = request.args.get('max_temp', default=None, type=float)
-    min_temp = request.args.get('min_temp', default=None, type=float)
-    humidity = request.args.get('humidity', default=None, type=float)
+    # Obtener el último año disponible en los datos
+    ultimo_año = datos_climaticos['year'].max()
 
-    temp_diff = max_temp - min_temp if max_temp is not None and min_temp is not None else None
-    precip_per_humidity = precipitation / humidity if precipitation is not None and humidity is not None else None
-    siembra_vs_cosecha = siembra_mensual / cosecha_mensual if siembra_mensual is not None and cosecha_mensual is not None else None
-    produccion_vs_siembra = produccion_mensual / siembra_mensual if produccion_mensual is not None and siembra_mensual is not None else None
+    # Obtener los parámetros del formulario
+    year = int(request.form['year'])
+    month = int(request.form['month'])
+    region = request.form['region']
+    siembra_mensual = float(request.form['siembra_mensual'])
+    cosecha_mensual = float(request.form['cosecha_mensual'])
+    precipitation = float(request.form.get('precipitation', 0))  # Default to 0 if not provided
+    max_temp = float(request.form.get('max_temp', 0))  # Default to 0 if not provided
+    min_temp = float(request.form.get('min_temp', 0))  # Default to 0 if not provided
+    humidity = float(request.form.get('humidity', 0))  # Default to 0 if not provided
 
+    # Calcular características adicionales
+    temp_diff = max_temp - min_temp
+    precip_per_humidity = precipitation / humidity if humidity != 0 else 0  # Avoid division by zero
+    siembra_vs_cosecha = siembra_mensual / cosecha_mensual if cosecha_mensual != 0 else 0  # Avoid division by zero
+    produccion_vs_siembra = datos_agricola[(datos_agricola['year'] == year) &
+                                           (datos_agricola['month'] == month) &
+                                           (datos_agricola['region'] == region)]['produccion_mensual'].values[0] / siembra_mensual if siembra_mensual != 0 else 0  # Avoid division by zero
+
+    # Crear DataFrame con los valores proporcionados
     data = pd.DataFrame({
         'year': [year],
         'month': [month],
         'region': [region],
         'siembra_mensual': [siembra_mensual],
         'cosecha_mensual': [cosecha_mensual],
-        'produccion_mensual': [produccion_mensual],
         'precipitation': [precipitation],
         'max_temp': [max_temp],
         'min_temp': [min_temp],
@@ -91,22 +86,15 @@ def predict_rendimiento():
         'produccion_vs_siembra': [produccion_vs_siembra]
     })
 
+    # Hacer predicción
     prediccion = model.predict(data)
-    resultado = {
-        'year': year,
-        'month': month,
-        'region': region,
-        'siembra_mensual': siembra_mensual,
-        'cosecha_mensual': cosecha_mensual,
-        'produccion_mensual': produccion_mensual,
-        'precipitation': precipitation,
-        'max_temp': max_temp,
-        'min_temp': min_temp,
-        'humidity': humidity,
-        'prediccion_rendimiento': prediccion[0]
-    }
+    resultado = {'prediccion_rendimiento': prediccion[0]}
 
-    return render_template('resultado.html', resultado=resultado)
+    # Calcular rendimiento de cultivo actual (ejemplo)
+    rendimiento_actual = siembra_mensual - cosecha_mensual
+
+    # Renderizar la plantilla de resultado con los datos del formulario y la predicción
+    return render_template('formulario.html', resultado=resultado, rendimiento_actual=rendimiento_actual)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

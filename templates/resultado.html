@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado de Predicción</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Resultado de la Predicción</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Resultado de Predicción</h1>
-        <p><strong>Año:</strong> {{ resultado.year }}</p>
-        <p><strong>Mes:</strong> {{ resultado.month }}</p>
-        <p><strong>Región:</strong> {{ resultado.region }}</p>
-        <p><strong>Siembra Mensual (tareas):</strong> {{ resultado.siembra_mensual }}</p>
-        <p><strong>Cosecha Mensual (tareas):</strong> {{ resultado.cosecha_mensual }}</p>
-        <p><strong>Producción Mensual (millares):</strong> {{ resultado.produccion_mensual }}</p>
-        <p><strong>Precipitación (mm):</strong> {{ resultado.precipitation }}</p>
-        <p><strong>Humedad (%):</strong> {{ resultado.humidity }}</p>
-        <p><strong>Temperatura Máxima (°C):</strong> {{ resultado.max_temp }}</p>
-        <p><strong>Temperatura Mínima (°C):</strong> {{ resultado.min_temp }}</p>
-        <p><strong>Predicción de Rendimiento:</strong> {{ resultado.prediccion_rendimiento }}</p>
-        <a href="/" class="btn btn-primary">Volver</a>
-    </div>
+    <h1>Resultado de la Predicción</h1>
+    <p><strong>Rendimiento Predicho:</strong> {{ resultado['prediccion_rendimiento'] }}</p>
+    <p><strong>Rendimiento Actual:</strong> {{ resultado['rendimiento_actual'] }}</p>
+    <h2>Datos Proporcionados</h2>
+    <ul>
+        <li><strong>Año:</strong> {{ data['year'] }}</li>
+        <li><strong>Mes:</strong> {{ data['month'] }}</li>
+        <li><strong>Región:</strong> {{ data['region'] }}</li>
+        <li><strong>Siembra Mensual (tareas):</strong> {{ data['siembra_mensual'] }}</li>
+        <li><strong>Cosecha Mensual (tareas):</strong> {{ data['cosecha_mensual'] }}</li>
+        <li><strong>Producción Mensual (millares):</strong> {{ data['produccion_mensual'] }}</li>
+        <li><strong>Precipitación (mm):</strong> {{ data['precipitation'] }}</li>
+        <li><strong>Humedad (%):</strong> {{ data['humidity'] }}</li>
+        <li><strong>Temperatura Máxima (°C):</strong> {{ data['max_temp'] }}</li>
+        <li><strong>Temperatura Mínima (°C):</strong> {{ data['min_temp'] }}</li>
+    </ul>
 </body>
 </html>
