@@ -54,21 +54,21 @@ def predict_rendimiento():
     client.download_file(bucket_name, file_names['modelo_gbr'], 'modelo_gbr.pkl')
     model = joblib.load('modelo_gbr.pkl')
 
-        # Descargar datos para obtener valores por defecto
+    # Descargar datos para obtener valores por defecto
     client.download_file(bucket_name, file_names['datos_climaticos'], 'datos_climaticos.xlsx')
     client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
 
     datos_climaticos = pd.read_excel('datos_climaticos.xlsx')
     datos_agricola = pd.read_excel('data_agricola.xlsx')
 
-        # Convertir las columnas a minúsculas para asegurar la consistencia
+    # Convertir las columnas a minúsculas para asegurar la consistencia
     datos_climaticos.columns = datos_climaticos.columns.str.lower()
     datos_agricola.columns = datos_agricola.columns.str.lower()
 
-        # Obtener el último año disponible en los datos
+    # Obtener el último año disponible en los datos
     ultimo_año = datos_climaticos['year'].max()
 
-        # Obtener los parámetros de la solicitud, usando valores predeterminados cuando sea necesario
+    # Obtener los parámetros de la solicitud, usando valores predeterminados cuando sea necesario
     year = request.args.get('year', default=ultimo_año, type=int)
     month = request.args.get('month', default=int(datos_climaticos['month'].mode()[0]), type=int)
     region = request.args.get('region', default=datos_climaticos['region'].mode()[0], type=str)
@@ -79,7 +79,7 @@ def predict_rendimiento():
     min_temp = request.args.get('min_temp', default=None, type=float)
     humidity = request.args.get('humidity', default=None, type=float)
 
-        # Obtener valores por defecto si no se proporcionaron
+    # Obtener valores por defecto si no se proporcionaron
     defaults = get_defaults(datos_agricola, datos_climaticos, ultimo_año, month, region)
     siembra_mensual = siembra_mensual if siembra_mensual not in [None, 0] else defaults['siembra_mensual']
     cosecha_mensual = cosecha_mensual if cosecha_mensual not in [None, 0] else defaults['cosecha_mensual']
@@ -88,13 +88,13 @@ def predict_rendimiento():
     min_temp = min_temp if min_temp not in [None, 0] else defaults['min_temp']
     humidity = humidity if humidity not in [None, 0] else defaults['humidity']
 
-        # Calcular características adicionales
+    # Calcular características adicionales
     temp_diff = max_temp - min_temp
     precip_per_humidity = precipitation / humidity
     siembra_vs_cosecha = siembra_mensual / cosecha_mensual
     produccion_vs_siembra = defaults['produccion_mensual'] / siembra_mensual
     
-        # Crear DataFrame con los valores proporcionados o por defecto
+    # Crear DataFrame con los valores proporcionados o por defecto
     data = pd.DataFrame({
         'year': [year],
         'month': [month],
@@ -117,67 +117,35 @@ def predict_rendimiento():
     prediccion = model.predict(data)
     resultado = {'prediccion_rendimiento': prediccion[0]}
 
-     return f'''
+    return f'''
         <!DOCTYPE html>
         <html lang="es">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Resultado de la Predicción</title>
+            <title>Predicción de Rendimiento</title>
         </head>
         <body>
-            <h1>Formulario de Predicción de Rendimiento</h1>
-            <form method="post" action="/predict">
-                <!-- Aquí puedes incluir el formulario HTML nuevamente para que el usuario pueda hacer otra predicción -->
-                <!-- Mismo formulario que antes -->
-            </form>
-            <div class="result">
-                <h2>Resultado de la Predicción</h2>
-                <p>{resultado}</p>
-                <p>{rendimiento_actual_text}</p>
-            </div>
+            <h1>Predicción de Rendimiento</h1>
+            <p>{rendimiento_actual_text}</p>
+            <p>Predicción: {resultado['prediccion_rendimiento']}</p>
         </body>
         </html>
-        '''
-    
-    except Exception as e:
-        # Manejo de errores
-        print(f"Error: {e}")
-        return f'''
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Formulario de Predicción de Rendimiento</title>
-        </head>
-        <body>
-            <h1>Formulario de Predicción de Rendimiento</h1>
-            <form method="post" action="/predict">
-                <!-- Aquí puedes incluir el formulario HTML nuevamente para que el usuario pueda hacer otra predicción -->
-                <!-- Mismo formulario que antes -->
-            </form>
-            <div class="error">
-                <p>Error: {e}</p>
-            </div>
-        </body>
-        </html>
-        '''
+    '''
 
-def get_defaults(datos_agricola, datos_climaticos, year, month, region):
-    promedio_agricola = datos_agricola[(datos_agricola['year'] == year) & (datos_agricola['month'] == month) & (datos_agricola['region'] == region)].mean(numeric_only=True)
-    promedio_climatico = datos_climaticos[(datos_climaticos['year'] == year) & (datos_climaticos['month'] == month) & (datos_climaticos['region'] == region)].mean(numeric_only=True)
-
+def get_defaults(datos_agricola, datos_climaticos, ultimo_año, month, region):
+    # Función para obtener valores por defecto
+    # Implementa tu lógica para obtener valores por defecto aquí
     defaults = {
-        'siembra_mensual': promedio_agricola['siembra_mensual'],
-        'cosecha_mensual': promedio_agricola['cosecha_mensual'],
-        'produccion_mensual': promedio_agricola['produccion_mensual'],
-        'precipitation': promedio_climatico['precipitation'],
-        'max_temp': promedio_climatico['max_temp'],
-        'min_temp': promedio_climatico['min_temp'],
-        'humidity': promedio_climatico['humidity']
+        'siembra_mensual': datos_agricola['siembra_mensual'].mean(),
+        'cosecha_mensual': datos_agricola['cosecha_mensual'].mean(),
+        'precipitation': datos_climaticos['precipitation'].mean(),
+        'max_temp': datos_climaticos['max_temp'].mean(),
+        'min_temp': datos_climaticos['min_temp'].mean(),
+        'humidity': datos_climaticos['humidity'].mean(),
+        'produccion_mensual': datos_agricola['produccion_mensual'].mean()
     }
     return defaults
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True)
