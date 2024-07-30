@@ -4,10 +4,13 @@ import pandas as pd
 import os
 import joblib
 import numpy as np
+from dotenv import load_dotenv
+from datetime import datetime
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Configurar el cliente de S3
 session = boto3.session.Session()
 client = session.client('s3',
                         region_name='fra1',
@@ -21,6 +24,11 @@ file_names = {
     'datos_climaticos': 'datos_climaticos.xlsx',
     'modelo_gbr': 'modelo_gbr.pkl'
 }
+
+@app.route('/')
+def home():
+    current_year = datetime.now().year
+    return render_template('formulario.html', current_year=current_year)
 
 @app.route('/data_agricola', methods=['GET'])
 def obtener_datos_mensuales():
@@ -41,21 +49,17 @@ def predict_rendimiento():
     client.download_file(bucket_name, file_names['modelo_gbr'], 'modelo_gbr.pkl')
     model = joblib.load('modelo_gbr.pkl')
 
-    # Descargar datos para obtener valores por defecto
     client.download_file(bucket_name, file_names['datos_climaticos'], 'datos_climaticos.xlsx')
     client.download_file(bucket_name, file_names['data_agricola'], 'data_agricola.xlsx')
 
     datos_climaticos = pd.read_excel('datos_climaticos.xlsx')
     datos_agricola = pd.read_excel('data_agricola.xlsx')
 
-    # Convertir las columnas a minúsculas para asegurar la consistencia
     datos_climaticos.columns = datos_climaticos.columns.str.lower()
     datos_agricola.columns = datos_agricola.columns.str.lower()
 
-    # Obtener el último año disponible en los datos
     ultimo_año = datos_climaticos['year'].max()
 
-    # Obtener los parámetros de la solicitud, usando valores predeterminados cuando sea necesario
     year = request.args.get('year', default=ultimo_año, type=int)
     month = request.args.get('month', default=int(datos_climaticos['month'].mode()[0]), type=int)
     region = request.args.get('region', default=datos_climaticos['region'].mode()[0], type=str)
@@ -66,7 +70,6 @@ def predict_rendimiento():
     min_temp = request.args.get('min_temp', default=None, type=float)
     humidity = request.args.get('humidity', default=None, type=float)
 
-    # Obtener valores por defecto si no se proporcionaron
     defaults = get_defaults(datos_agricola, datos_climaticos, year, month, region)
     siembra_mensual = siembra_mensual if siembra_mensual not in [None, 0] else defaults['siembra_mensual']
     cosecha_mensual = cosecha_mensual if cosecha_mensual not in [None, 0] else defaults['cosecha_mensual']
@@ -75,13 +78,11 @@ def predict_rendimiento():
     min_temp = min_temp if min_temp not in [None, 0] else defaults['min_temp']
     humidity = humidity if humidity not in [None, 0] else defaults['humidity']
 
-    # Calcular características adicionales
     temp_diff = max_temp - min_temp
     precip_per_humidity = precipitation / humidity
     siembra_vs_cosecha = siembra_mensual / cosecha_mensual
     produccion_vs_siembra = defaults['produccion_mensual'] / siembra_mensual
 
-    # Crear DataFrame con los valores proporcionados o por defecto
     data = pd.DataFrame({
         'year': [year],
         'month': [month],
@@ -98,7 +99,6 @@ def predict_rendimiento():
         'produccion_vs_siembra': [produccion_vs_siembra]
     })
 
-    # Hacer predicción
     prediccion = model.predict(data)
     resultado = {
         'year': year,
@@ -130,10 +130,6 @@ def get_defaults(datos_agricola, datos_climaticos, year, month, region):
         'humidity': promedio_climatico['humidity']
     }
     return defaults
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
